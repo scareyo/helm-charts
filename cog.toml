@@ -1,0 +1,20 @@
+generate_mono_repository_global_tag = false
+pre_bump_hooks = []
+post_bump_hooks = []
+pre_package_bump_hooks = [
+  "yq -iy --width 200 '.version = \"{{version}}\"' Chart.yaml"
+]
+post_package_bump_hooks = [
+  "helm dependency build .",
+  "helm package .",
+  "helm push {{package}}-{{version}}.tgz oci://ghcr.io/scareyo",
+  "git push",
+  "git push origin tag {{package}}-{{version}}"
+]
+
+[[changelog.authors]]
+signature = "sam@scarey.me"
+username = "scareyo"
+
+[packages]
+prowlarr = { path = "charts/prowlarr", public_api = false }
