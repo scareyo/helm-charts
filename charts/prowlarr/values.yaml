@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.2.0/charts/other/app-template/values.schema.json
+
+prowlarr:
+  # -- AuthenticationMethod
+  # @section -- Attic configuration
+  authenticationMethod: External
+
+controllers:
+  main:
+    type: deployment
+    # -- Number of desired pods. When using a HorizontalPodAutoscaler, set this to `null`.
+    # @section -- Controller configuration
+    replicas: 1
+    defaultContainerOptions:
+      image:
+        # -- Image repository
+        # @section -- Controller configuration
+        repository: ghcr.io/home-operations/prowlarr
+        # -- Image tag
+        # @section -- Controller configuration
+        tag: 1.33.0
+
+persistence:
+  config:
+    type: configMap
+    name: prowlarr-config
+    globalMounts:
+      - path: /config
+
+service:
+  main:
+    controller: api-server
+    # -- Configure the Service port information here.
+    # @section -- Service configuration
+    ports:
+      http:
+        # -- The port number
+        # @section -- Service configuration
+        port: 8080

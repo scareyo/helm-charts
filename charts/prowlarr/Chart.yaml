@@ -1,0 +1,14 @@
+---
+apiVersion: v2
+description: An indexer manager
+name: prowlarr
+version: 0.1.0
+maintainers:
+  - name: Samuel Carey
+    email: sam@scarey.me
+dependencies:
+  - name: common
+    repository: https://bjw-s.github.io/helm-charts
+    version: 3.7.3
+sources:
+  - https://github.com/scareyo/helm-charts
