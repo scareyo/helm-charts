@@ -1,0 +1,33 @@
+---
+name: 🏷️ Release charts
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - charts/**/*.yaml
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Release charts
+        run: 'nix run .#ci-release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_USER_NAME: ${{ github.actor }}
+          GIT_USER_EMAIL: ${{ github.actor }}@users.noreply.github.com
+          REGISTRY: ghcr.io/scareyo
+          REGISTRY_USERNAME: scareyo
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}

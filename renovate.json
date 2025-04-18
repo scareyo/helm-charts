@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "{{parentDir}}",
+  "packageRules": [
+    {
+      "matchManagers": [ "helm-values" ],
+      "matchUpdateTypes": [ "minor", "patch" ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [ "helmv3" ],
+      "matchUpdateTypes": [ "patch" ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [ "helmv3" ],
+      "matchUpdateTypes": [ "minor" ],
+      "semanticCommitType": "feat",
+      "automerge": true,
+      "postUpgradeTasks": {
+        "commands": [
+          "nix run --extra-experimental-features nix-command --extra-experimental-features flakes .#ci-renovate {{parentDir}} minor"
+        ],
+        "fileFilters": ["**/Chart.yaml", "**/README.md"],
+        "executionMode": "branch"
+      }
+    },
+    {
+      "matchUpdateTypes": [ "major" ],
+      "semanticCommitType": "feat",
+      "postUpgradeTasks": {}
+    }
+  ],
+  "postUpgradeTasks": {
+    "commands": [
+      "nix run --extra-experimental-features nix-command --extra-experimental-features flakes .#ci-renovate {{parentDir}} patch"
+    ],
+    "fileFilters": ["**/Chart.yaml", "**/README.md"],
+    "executionMode": "branch"
+  }
+}

@@ -1,0 +1,13 @@
+disable_changelog = true
+generate_mono_repository_global_tag = false
+
+pre_package_bump_hooks = [
+  "ci-cog-pre-bump {{version}}"
+]
+
+post_package_bump_hooks = [
+  "ci-cog-post-bump {{package}} {{version}}"
+]
+
+[commit_types]
+chore = { bump_minor = true }
