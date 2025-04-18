@@ -85,6 +85,7 @@
               git push origin tag "$tag"
 
               echo $REGISTRY_PASSWORD | helm registry login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
+              helm repo add bjw-s https://bjw-s.github.io/helm-charts
               helm dependency build .
               helm package .
               helm push "$tag.tgz" oci://ghcr.io/scareyo
