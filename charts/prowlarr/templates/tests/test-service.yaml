@@ -1,0 +1,20 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-test-service"
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: test-service
+      image: alpine/curl
+      command: ["/bin/sh", "-c"]
+      args:
+        - >
+          apk update;
+          apk add jq;
+          response=$(curl http://{{ .Release.Name }}:{{ .Values.service.main.ports.http.port }}/ping);
+          echo $response;
+          echo $response | jq -r ".status" | grep -x OK || exit 1;
+  restartPolicy: Never

@@ -11,3 +11,6 @@ post_package_bump_hooks = [
 
 [commit_types]
 chore = { bump_minor = true }
+
+[packages]
+prowlarr = { path = "charts/prowlarr", public_api = false }
