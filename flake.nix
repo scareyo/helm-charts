@@ -47,7 +47,24 @@
           text = ''
             kind create cluster
             helm repo add bjw-s https://bjw-s.github.io/helm-charts
-            ct lint-and-install
+
+            readarray -t changed < <(ct list-changed)
+
+            echo "detected changes in the following charts:"
+            echo "''${changed[@]}"
+
+            # TODO: Allow more than one chart to change at a time. Some charts
+            #       are too powerful to be tested by GitHub Actions runners.
+            if (( ''${#changed[@]} > 1 )); then
+              echo "More than one chart has changes"
+              exit 1
+            fi
+
+            if [ "''${changed[0]}" == "charts/vintagestory" ]; then
+              ct lint
+            else
+              ct lint-and-install
+            fi
           '';
         };
 

@@ -14,3 +14,4 @@ chore = { bump_minor = true }
 
 [packages]
 prowlarr = { path = "charts/prowlarr", public_api = false }
+vintagestory = { path = "charts/vintagestory", public_api = false }
