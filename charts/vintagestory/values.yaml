@@ -1,0 +1,225 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/app-template-3.2.0/charts/other/app-template/values.schema.json
+
+server:
+  # -- 2-letter code of localization to use on this server. Determines language of server messages.
+  # @section -- Server configuration
+  language: en
+  # -- Short string, visible in the public server listing.
+  # @section -- Server configuration
+  name: Vintage Story Server
+  # -- Can be longer than name, visible in the public server listing. You can use VTML here.
+  # @section -- Server configuration
+  description: ~
+  # -- The message shown to players when they join. Placeholder {0} will be replaced with Player's nickname.
+  # @section -- Server configuration
+  welcomeMessage: "Welcome {0}, may you survive well and prosper"
+  # -- Maximum number of players.
+  # @section -- Server configuration
+  maxClients: 16
+  # -- Password required to join the server. Disabled if null.
+  # @section -- Server configuration
+  password: ~
+  # -- Advertise the server on the public server listing.
+  # @section -- Server configuration
+  advertiseServer: false
+  # -- Allow players to hit each other.
+  # @section -- Server configuration
+  allowPvp: true
+  # -- Allow fire to spread.
+  # @section -- Server configuration
+  allowFireSpread: true
+  # -- Allow blocks to fall.
+  # @section -- Server configuration
+  allowFallingBlocks: true
+  # -- Compress data sent to clients.
+  # @section -- Server configuration
+  compressPackets: true
+  # -- Spawn position.
+  # @section -- Server configuration
+  spawn: [0, 0]
+  # -- Pass time when no players are online.
+  # @section -- Server configuration
+  passTimeWhenEmpty: false
+  # -- Client connection timeout in seconds.
+  # @section -- Server configuration
+  clientConnectionTimeout: 150
+  # -- Maximum player view distance.
+  # @section -- Server configuration
+  maxChunkRadius: 12
+  # -- Default player role.
+  # @section -- Server configuration
+  defaultRole: suplayer
+  # -- List of roles. See templates/config.yaml for the complete set of available fields.
+  # @section -- Server configuration
+  roles:
+      # -- Role code.
+      # @section -- Server configuration
+    - code: suplayer
+      # -- Role name.
+      # @section -- Server configuration
+      name: Survival Player
+      # -- Role description.
+      # @section -- Server configuration
+      description: Can use/place/break blocks in unprotected areas (priv level 0), create/manage player groups and chat. Can claim an area of up to 8 chunks.
+      # -- Default gamemode for role. 0 - Guest, 1 - Survival, 2 - Creative, 3 - Spectator.
+      # @section -- Server configuration
+      defaultGameMode: 1
+      # -- Volume allowed in cubic meters for the land claims of each player who has this role.
+      # @section -- Server configuration
+      landClaimAllowance: "262144"
+      # -- List of role privileges (full list may be shown by "/list privileges" command).
+      # @section -- Server configuration
+      privileges:
+        - controlplayergroups
+        - manageplayergroups
+        - chat
+        - areamodify
+        - build
+        - useblock
+        - attackcreatures
+        - attackplayers
+        - selfkill
+
+world:
+  # -- Width of the map.
+  # @section -- World configuration
+  sizeX: "1024000"
+  # -- Height of the map.
+  # @section -- World configuration
+  sizeY: "256"
+  # -- Depth of the map.
+  # @section -- World configuration
+  sizeZ: "1024000"
+  # -- World seed. Does not guarantee exactly the same world each time.
+  # @section -- World configuration
+  seed: ~
+  # -- World name.
+  # @section -- World configuration
+  name: A new world
+  # -- Allow creative mode.
+  # @section -- World configuration
+  allowCreativeMode: true
+  # -- World playstyle.
+  # @section -- World configuration
+  playstyle: surviveandbuild
+  # -- World playstyle language code.
+  # @section -- World configuration
+  playstyleLanguage: surviveandbuild-bands
+  # -- World type.
+  # @section -- World configuration
+  type: standard
+  # -- World configuration in JSON format. See "/worldconfig" command for properties.
+  # @section -- World configuration
+  config: ~
+
+controllers:
+  main:
+    # @ignore
+    type: statefulset
+    # @ignore
+    replicas: 1
+    statefulset:
+      volumeClaimTemplates:
+        -  # @ignore
+          name: vintagestory-data
+          # -- Storage class for the data volume
+          # @section -- Controller configuration
+          storageClass: ~
+          # @ignore
+          accessMode: ReadWriteOnce
+          # -- Size of the data volume
+          # @section -- Controller configuration
+          size: 64Gi
+          # -- Keep the data volume on helm uninstall
+          # @section -- Controller configuration
+          retain: true
+          # @ignore
+          globalMounts:
+            - path: /vintagestory/data
+    # @ignore
+    pod:
+      securityContext:
+        fsGroup: 65534
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 65534
+        runAsUser: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+    initContainers:
+      mods:
+        # -- Enable mod installation
+        # @section -- Controller configuration
+        enabled: false
+        # @ignore
+        image:
+          repository: bash
+          tag: 5.2.37
+        env:
+          # -- A comma-separated list of mod URLs to install
+          # @section -- Controller configuration
+          MODS: ""
+        # @ignore
+        command:
+          - bash
+          - -c
+        # @ignore
+        args:
+          - |
+            IFS=", " read -r -a mods <<< "$MODS"
+            rm -rf /vintagestory/data/Mods
+            mkdir -p /vintagestory/data/helm
+            mkdir -p /vintagestory/data/Mods
+            for mod in "${mods[@]}"; do
+              echo "${mod##*/}"
+              if [ ! -f "/vintagestory/data/helm/${mod##*/}" ]; then
+                wget "$mod" -P /vintagestory/data/helm
+              fi
+              echo "copying ${mod##*/} to mods directory"
+              cp /vintagestory/data/helm/${mod##*/} /vintagestory/data/Mods
+            done
+        # @ignore
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
+    containers:
+      main:
+        image:
+          # -- Image repository
+          # @section -- Controller configuration
+          repository: zsuatem/vintagestory
+          # -- Image tag
+          # @section -- Controller configuration
+          tag: 1.20.7
+        # @ignore
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - "ALL"
+
+persistence:
+  config:
+    # -- Enable ConfigMap configuration
+    # @section -- Persistence configuration
+    enabled: true
+    # @ignore
+    name: vintagestory-config
+    # @ignore
+    type: configMap
+    # @ignore
+    globalMounts:
+      - path: /vintagestory/data/serverconfig.json
+        subPath: serverconfig.json
+
+# @ignore
+service:
+  main:
+    controller: main
+    ports:
+      tcp:
+        port: 42420
+        protocol: TCP

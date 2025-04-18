@@ -1,0 +1,121 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+  serverconfig.json: |-
+    {
+      "FileEditWarning": "",
+      "ConfigVersion": "1.7",
+      "ServerName": {{ .Values.server.name | quote }},
+      "ServerUrl": null,
+      "ServerDescription": {{ .Values.server.description | default "null" | quote }},
+      "WelcomeMessage": {{ .Values.server.welcomeMessage | quote }},
+      "Ip": null,
+      "Port": {{ .Values.service.main.ports.tcp.port }},
+      "Upnp": false,
+      "CompressPackets": {{ .Values.server.compressPackets }},
+      "AdvertiseServer": {{ .Values.server.advertiseServer }},
+      "MaxClients": {{ .Values.server.maxClients }},
+      "MaxClientsInQueue": 0,
+      "PassTimeWhenEmpty": {{ .Values.server.passTimeWhenEmpty }},
+      "MasterserverUrl": "http://masterserver.vintagestory.at/api/v1/servers/",
+      "ModDbUrl": "https://mods.vintagestory.at/",
+      "ClientConnectionTimeout": 150,
+      "EntityDebugMode": false,
+      "Password": {{ .Values.server.password | quote | default "null" }},
+      "MapSizeX": {{ .Values.world.sizeX }},
+      "MapSizeY": {{ .Values.world.sizeY }},
+      "MapSizeZ": {{ .Values.world.sizeZ }},
+      "ServerLanguage": {{ .Values.server.language | quote }},
+      "MaxChunkRadius": 12,
+      "TickTime": 33.333332,
+      "SpawnCapPlayerScaling": 0.5,
+      "BlockTickChunkRange": 5,
+      "MaxMainThreadBlockTicks": 10000,
+      "RandomBlockTicksPerChunk": 16,
+      "BlockTickInterval": 300,
+      "SkipEveryChunkRow": 0,
+      "SkipEveryChunkRowWidth": 0,
+      "Roles": [
+      {{- range .Values.server.roles }}
+        {
+          "Code": {{ .code | quote }},
+          "PrivilegeLevel": {{ .privilegeLevel | default "-1" }},
+          "Name": {{ .name | quote }},
+          "Description": {{ .description | quote }},
+          "DefaultSpawn": {{ .defaultSpawn | default "null" }},
+          "ForcedSpawn": {{ .forcedSpawn | default "null" }},
+          "Privileges": [
+        {{- range .privileges }}
+            {{ . | quote }},
+        {{- end }}
+          ],
+          "RuntimePrivileges": [
+        {{- range .runtimePrivileges }}
+            {{ . | quote }}
+        {{- end }}
+          ],
+          "DefaultGameMode": {{ .defaultGameMode | default "0" }},
+          "Color": {{ .color | default "White" | quote }},
+          "LandClaimAllowance": {{ .landClaimAllowance | default "0" }},
+          "LandClaimMinSize": {
+            "X": 5,
+            "Y": 5,
+            "Z": 5
+          },
+          "LandClaimMaxAreas": 3,
+          "AutoGrant": false
+        },
+      {{- end }}
+      ],
+      "DefaultRoleCode": {{ .Values.server.defaultRole | quote }},
+      "ModPaths": [
+        "Mods",
+        "./data/Mods"
+      ],
+      "AntiAbuse": 0,
+      "WorldConfig": {
+        "Seed": {{ .Values.world.seed | quote | default "null" }},
+        "SaveFileLocation": "./data/Saves/default.vcdbs",
+        "WorldName": {{ .Values.world.name | quote }},
+        "AllowCreativeMode": {{ .Values.world.allowCreativeMode }},
+        "PlayStyle": {{ .Values.world.playstyle | quote }},
+        "PlayStyleLangCode": {{ .Values.world.playstyleLanguage | quote }},
+        "WorldType": {{ .Values.world.type | quote }},
+        "WorldConfiguration": {{ .Values.world.config | default "null" }},
+        "MapSizeY": null,
+        "CreatedByPlayerName": null,
+        "DisabledMods": null,
+        "RepairMode": false
+      },
+      "NextPlayerGroupUid": 10,
+      "GroupChatHistorySize": 20,
+      "MaxOwnedGroupChannelsPerUser": 10,
+      "OnlyWhitelisted": false,
+      "WhitelistMode": 1,
+      "VerifyPlayerAuth": true,
+      "DefaultSpawn": null,
+      "AllowPvP": {{ .Values.server.allowPvp }},
+      "AllowFireSpread": {{ .Values.server.allowFireSpread }},
+      "AllowFallingBlocks": {{ .Values.server.allowFallingBlocks }},
+      "HostedMode": false,
+      "HostedModeAllowMods": false,
+      "StartupCommands": null,
+      "RepairMode": false,
+      "AnalyzeMode": false,
+      "CorruptionProtection": true,
+      "RegenerateCorruptChunks": false,
+      "ChatRateLimitMs": 1000,
+      "DieBelowDiskSpaceMb": 400,
+      "ModIdBlackList": null,
+      "ModIdWhiteList": null,
+      "ServerIdentifier": null,
+      "LogBlockBreakPlace": false,
+      "LogFileSplitAfterLine": 500000,
+      "DieAboveErrorCount": 100000,
+      "LoginFloodProtection": false,
+      "TemporaryIpBlockList": false,
+      "DieAboveMemoryUsageMb": 50000
+    }
