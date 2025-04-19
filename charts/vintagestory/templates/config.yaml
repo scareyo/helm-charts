@@ -10,7 +10,7 @@ data:
       "ConfigVersion": "1.7",
       "ServerName": {{ .Values.server.name | quote }},
       "ServerUrl": null,
-      "ServerDescription": {{ .Values.server.description | default "null" | quote }},
+      "ServerDescription": {{ .Values.server.description | quote | default "null" }},
       "WelcomeMessage": {{ .Values.server.welcomeMessage | quote }},
       "Ip": null,
       "Port": {{ .Values.service.main.ports.tcp.port }},
@@ -65,8 +65,8 @@ data:
             "Y": 5,
             "Z": 5
           },
-          "LandClaimMaxAreas": 3,
-          "AutoGrant": false
+          "LandClaimMaxAreas": {{ .landClaimMaxAreas | default "3" }},
+          "AutoGrant": {{ .autoGrant | default "false" }}
         },
       {{- end }}
       ],
