@@ -53,23 +53,62 @@ server:
   # -- List of roles. See templates/config.yaml for the complete set of available fields.
   # @section -- Server configuration
   roles:
-      # -- Role code.
-      # @section -- Server configuration
-    - code: suplayer
-      # -- Role name.
-      # @section -- Server configuration
-      name: Survival Player
-      # -- Role description.
-      # @section -- Server configuration
-      description: Can use/place/break blocks in unprotected areas (priv level 0), create/manage player groups and chat. Can claim an area of up to 8 chunks.
-      # -- Default gamemode for role. 0 - Guest, 1 - Survival, 2 - Creative, 3 - Spectator.
-      # @section -- Server configuration
+    # Visitor Roles
+    - code: suvisitor
+      name: Survival Visitor
+      description: Can only visit this world and chat but not use/place/break anything
+      privileges:
+        - chat
       defaultGameMode: 1
-      # -- Volume allowed in cubic meters for the land claims of each player who has this role.
-      # @section -- Server configuration
-      landClaimAllowance: "262144"
-      # -- List of role privileges (full list may be shown by "/list privileges" command).
-      # @section -- Server configuration
+      color: Green
+      landClaimAllowance: "0"
+    - code: crvisitor
+      name: Creative Visitor
+      description: Can only visit this world, chat and fly but not use/place/break anything
+      privileges:
+        - chat
+      defaultGameMode: 2
+      color: DarkGray
+      landClaimAllowance: "0"
+
+    # Limited Roles
+    - code: limitedsuplayer
+      name: Limited Survival Player
+      description: Can use/place/break blocks only in permitted areas (priv level -1), create/manage player groups and chat
+      privileges:
+        - controlplayergroups
+        - manageplayergroups
+        - chat
+        - build
+        - useblock
+        - attackcreatures
+        - attackplayers
+        - selfkill
+      defaultGameMode: 1
+      landClaimAllowance: "0"
+    - code: limitedcrplayer
+      name: Limited Creative Player
+      description: Can use/place/break blocks in only in permitted areas (priv level -1), create/manage player groups, chat, fly and set his own game mode (= allows fly and change of move speed)
+      privileges:
+        - controlplayergroups
+        - manageplayergroups
+        - chat
+        - build
+        - useblock
+        - gamemode
+        - freemove
+        - attackcreatures
+        - attackplayers
+        - selfkill
+      defaultGameMode: 2
+      color: LightGreen
+      landClaimAllowance: "0"
+
+    # Player Roles
+    - code: suplayer
+      privilegeLevel: "0"
+      name: Survival Player
+      description: Can use/place/break blocks in unprotected areas (priv level 0), create/manage player groups and chat. Can claim an area of up to 8 chunks.
       privileges:
         - controlplayergroups
         - manageplayergroups
@@ -80,6 +119,122 @@ server:
         - attackcreatures
         - attackplayers
         - selfkill
+      defaultGameMode: 1
+      color: White
+      landClaimAllowance: "262144"
+    - code: crplayer
+      privilegeLevel: 100
+      name: Creative Player
+      description: Can use/place/break blocks in all areas (priv level 100), create/manage player groups, chat, fly and set his own game mode (= allows fly and change of move speed). Can claim an area of up to 40 chunks.
+      privileges:
+        - controlplayergroups
+        - manageplayergroups
+        - chat
+        - areamodify
+        - build
+        - useblock
+        - gamemode
+        - freemove
+        - attackcreatures
+        - attackplayers
+        - selfkill
+      defaultGameMode: 2
+      color: LightGreen
+      landClaimAllowance: "1310720"
+      landClaimMaxAreas: "6"
+
+    # Moderator Roles
+    - code: sumod
+      privilegeLevel: 200
+      name: Survival Moderator
+      description: Can use/place/break blocks everywhere (priv level 200), create/manage player groups, chat, kick/ban players and do serverwide announcements. Can claim an area of up to 4 chunks.
+      privileges:
+        - controlplayergroups
+        - manageplayergroups
+        - chat
+        - areamodify
+        - build
+        - useblock
+        - buildblockseverywhere
+        - useblockseverywhere
+        - kick
+        - ban
+        - announce
+        - readlists
+        - attackcreatures
+        - attackplayers
+        - selfkill
+      defaultGameMode: 1
+      color: Cyan
+      landClaimAllowance: "1310720"
+      landClaimMaxAreas: "60"
+    - code: crmod
+      privilegeLevel: 500
+      name: Creative Moderator
+      description: Can use/place/break blocks everywhere (priv level 500), create/manage player groups, chat, kick/ban players, fly and set his own or other players game modes (= allows fly and change of move speed). Can claim an area of up to 40 chunks.
+      privileges:
+        - controlplayergroups
+        - manageplayergroups
+        - chat
+        - areamodify
+        - build
+        - useblock
+        - buildblockseverywhere
+        - useblockseverywhere
+        - kick
+        - ban
+        - gamemode
+        - freemove
+        - commandplayer
+        - announce
+        - readlists
+        - attackcreatures
+        - attackplayers
+        - selfkill
+      defaultGameMode: 2
+      color: Cyan
+      landClaimAllowance: "1310720"
+      landClaimMaxAreas: "60"
+
+    # Admin Role
+    - code: admin
+      privilegeLevel: 99999
+      name: Admin
+      description: Has all privileges, including giving other players admin status.
+      privileges:
+        - build
+        - useblock
+        - buildblockseverywhere
+        - useblockseverywhere
+        - attackplayers
+        - attackcreatures
+        - freemove
+        - gamemode
+        - pickingrange
+        - chat
+        - kick
+        - ban
+        - whitelist
+        - setwelcome
+        - announce
+        - readlists
+        - give
+        - areamodify
+        - setspawn
+        - controlserver
+        - tp
+        - time
+        - grantrevoke
+        - root
+        - commandplayer
+        - controlplayergroups
+        - manageplayergroups
+        - selfkill
+      defaultGameMode: 1
+      color: LightBlue
+      landClaimAllowance: "2147483647"
+      landClaimMaxAreas: "99999"
+      autoGrant: true
 
 world:
   # -- Width of the map.
