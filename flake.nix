@@ -90,7 +90,9 @@
               helm package .
               helm push "$tag.tgz" oci://ghcr.io/scareyo
 
-              gh release create "$PACKAGE-$VERSION" --title "$tag" --notes "$(cog changelog -a $tag)"
+              # This parses the correct package from the `cog changelog` output
+              notes=$(cog changelog -a $1 | awk -v label="# $tag" '$0 ~ label {f=1} f && /^- - -$/ {exit} f { sub(/[ \t\r]+$/, ""); if ($0 != "") print }')
+              gh release create "$tag" --title "$tag" --notes "$notes"
             '')
           ];
           text = ''
