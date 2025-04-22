@@ -348,7 +348,7 @@ controllers:
           repository: zsuatem/vintagestory
           # -- Image tag
           # @section -- Controller configuration
-          tag: 1.20.8
+          tag: 1.20.9
         # @ignore
         securityContext:
           allowPrivilegeEscalation: false

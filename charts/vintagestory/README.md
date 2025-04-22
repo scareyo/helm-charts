@@ -1,6 +1,6 @@
 # vintagestory
 
-![Version: 0.2.1](https://img.shields.io/badge/Version-0.2.1-informational?style=flat-square) ![AppVersion: 1.20.8](https://img.shields.io/badge/AppVersion-1.20.8-informational?style=flat-square)
+![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![AppVersion: 1.20.9](https://img.shields.io/badge/AppVersion-1.20.9-informational?style=flat-square)
 
 Vintage Story dedicated game server
 
@@ -29,7 +29,7 @@ See [common](https://github.com/bjw-s/helm-charts/tree/common-3.7.3/charts/libra
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | controllers.main.containers.main.image.repository | string | `"zsuatem/vintagestory"` | Image repository |
-| controllers.main.containers.main.image.tag | string | `"1.20.8"` | Image tag |
+| controllers.main.containers.main.image.tag | string | `"1.20.9"` | Image tag |
 | controllers.main.initContainers.mods.enabled | bool | `false` | Enable mod installation |
 | controllers.main.initContainers.mods.env.MODS | string | `""` | A comma-separated list of mod URLs to install |
 | controllers.main.statefulset.volumeClaimTemplates[0].retain | bool | `true` | Keep the data volume on helm uninstall |
