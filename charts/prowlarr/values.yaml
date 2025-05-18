@@ -26,7 +26,7 @@ controllers:
           repository: ghcr.io/home-operations/prowlarr
           # -- Image tag
           # @section -- Controller configuration
-          tag: 1.35.1
+          tag: 1.36.2
         env:
           # -- Prowlarr authentication method. `Basic`, `Forms`, or `External`
           # @section -- Controller configuration

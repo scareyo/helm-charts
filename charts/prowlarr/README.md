@@ -1,6 +1,6 @@
 # prowlarr
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![AppVersion: 1.35.1](https://img.shields.io/badge/AppVersion-1.35.1-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![AppVersion: 1.36.2](https://img.shields.io/badge/AppVersion-1.36.2-informational?style=flat-square)
 
 An indexer manager/proxy built on the popular arr .net/reactjs base stack to integrate with your various PVR apps
 
@@ -30,7 +30,7 @@ See [common](https://github.com/bjw-s/helm-charts/tree/common-3.7.3/charts/libra
 |-----|------|---------|-------------|
 | controllers.main.containers.main.env.PROWLARR__AUTH__METHOD | string | `nil` | Prowlarr authentication method. `Basic`, `Forms`, or `External` |
 | controllers.main.containers.main.image.repository | string | `"ghcr.io/home-operations/prowlarr"` | Image repository |
-| controllers.main.containers.main.image.tag | string | `"1.35.1"` | Image tag |
+| controllers.main.containers.main.image.tag | string | `"1.36.2"` | Image tag |
 | controllers.main.replicas | int | `1` | Number of desired pods. When using a HorizontalPodAutoscaler, set this to `null` |
 
 ### Persistence configuration
